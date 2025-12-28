@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOU Parser - Extrator do Diário Oficial</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>DOU Parser - Extrator do Diário Oficial</h1>
+            <p class="subtitle">Extraia e organize atos legais do Diário Oficial da União</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Upload Section -->
+        <section id="upload-section">
+            <div id="drop-zone" class="drop-zone">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <p>Arraste o arquivo PDF do DOU aqui</p>
+                <p class="or">ou</p>
+                <button id="file-picker-btn" class="btn-primary">Selecionar Arquivo</button>
+                <input type="file" id="file-input" accept=".pdf" hidden>
+            </div>
+            <div id="progress-container" class="progress-container hidden">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <p id="progress-text" class="progress-text">Processando PDF...</p>
+            </div>
+        </section>
+
+        <!-- Statistics Section -->
+        <section id="stats-section" class="stats-section hidden">
+            <div class="stat-card">
+                <div class="stat-value" id="total-docs">0</div>
+                <div class="stat-label">Total de Documentos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-portarias">0</div>
+                <div class="stat-label">Portarias</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-decretos">0</div>
+                <div class="stat-label">Decretos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-outros">0</div>
+                <div class="stat-label">Outros</div>
+            </div>
+        </section>
+
+        <!-- Filters Section -->
+        <section id="filters-section" class="filters-section hidden">
+            <div class="filter-bar">
+                <input
+                    type="text"
+                    id="search-input"
+                    class="search-input"
+                    placeholder="Buscar em todos os campos..."
+                >
+                <select id="type-filter" class="filter-select">
+                    <option value="">Todos os Tipos</option>
+                </select>
+                <select id="ministry-filter" class="filter-select">
+                    <option value="">Todos os Ministérios</option>
+                </select>
+                <button id="export-btn" class="btn-export">Exportar CSV</button>
+            </div>
+        </section>
+
+        <!-- Table Section -->
+        <section id="table-section" class="table-section hidden">
+            <div class="table-container">
+                <table id="documents-table">
+                    <thead>
+                        <tr>
+                            <th data-sort="tipo">Tipo <span class="sort-indicator"></span></th>
+                            <th data-sort="numero">Número <span class="sort-indicator"></span></th>
+                            <th data-sort="data">Data <span class="sort-indicator"></span></th>
+                            <th data-sort="ministerio">Ministério <span class="sort-indicator"></span></th>
+                            <th data-sort="pagina">Página <span class="sort-indicator"></span></th>
+                            <th data-sort="previa">Prévia <span class="sort-indicator"></span></th>
+                            <th data-sort="signatario">Signatário <span class="sort-indicator"></span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                    </tbody>
+                </table>
+            </div>
+            <div id="no-results" class="no-results hidden">
+                Nenhum documento encontrado com os filtros aplicados.
+            </div>
+        </section>
+    </main>
+
+    <!-- Detail Modal -->
+    <div id="detail-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Detalhes do Documento</h2>
+                <button id="modal-close" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <strong>Tipo:</strong> <span id="detail-tipo"></span>
+                </div>
+                <div class="detail-row">
+                    <strong>Número:</strong> <span id="detail-numero"></span>
+                </div>
+                <div class="detail-row">
+                    <strong>Data:</strong> <span id="detail-data"></span>
+                </div>
+                <div class="detail-row">
+                    <strong>Ministério:</strong> <span id="detail-ministerio"></span>
+                </div>
+                <div class="detail-row">
+                    <strong>Página:</strong> <span id="detail-pagina"></span>
+                </div>
+                <div class="detail-row">
+                    <strong>Signatário:</strong> <span id="detail-signatario"></span>
+                </div>
+                <div class="detail-content">
+                    <strong>Conteúdo Completo:</strong>
+                    <pre id="detail-conteudo"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="parser.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
